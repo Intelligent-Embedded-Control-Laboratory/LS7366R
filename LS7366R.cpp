@@ -7,16 +7,22 @@ void LS7366R::begin(unsigned char _qei_cs)
     pinMode(qei_cs, OUTPUT);
     SPI.begin();
 
+    delay(100);
+
     digitalWrite(qei_cs, LOW);
     SPI.transfer(WR | MDR0);
     SPI.transfer(MDR0_CONF);
     digitalWrite(qei_cs, HIGH);
+
+    delay(100);
 
     digitalWrite(qei_cs, LOW);
     SPI.transfer(WR | MDR1);
     SPI.transfer(MDR1_CONF);
     digitalWrite(qei_cs, HIGH);
 
+    delay(100);
+    
     reset();
 }
 
