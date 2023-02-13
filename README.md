@@ -8,22 +8,25 @@ Feb 07, 2023
 #include <Arduino.h>
 #include <LS7366R.h>
 
-#define PIN_QEI_CS 10 
+const uint8_t PIN_QEI[4] = { 32, 33, 30, 31 };
 
-LS7366R qei;
+LS7366R encoder;
 
 void setup()
 {
     Serial.begin(115200);
 
-    qei.begin(PIN_QEI_CS);
+    encoder.begin(PIN_QEI, 4);
 }
 
 void loop()
 {
-    long pulse = qei.read();
+    encoder.read();
 
-    Serial.print(pulse);
+    for (int i = 0; i < 4; i++)
+    {
+        Serial.printf("%d ", encoder.get_pulse()[i]);
+    }
     Serial.println();
     Serial.flush();
 
