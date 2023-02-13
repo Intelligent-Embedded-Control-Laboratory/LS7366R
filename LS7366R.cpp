@@ -1,55 +1,38 @@
 #include "LS7366R.h"
 
-void LS7366R::begin(unsigned char _qei_cs)
+void LS7366R::begin(const unsigned char* _qei_cs, int _num_of_qei)
 {
-    qei_cs = _qei_cs;
+    num_of_qei = _num_of_qei;
+    qei_cs = new unsigned char[_num_of_qei];
+    pulse = new long int[_num_of_qei];
+    memset(pulse, 0, sizeof(long) * _num_of_qei);
+    memcpy(qei_cs, _qei_cs, _num_of_qei);
 
-    pinMode(qei_cs, OUTPUT);
+    for (int i = 0; i < _num_of_qei; i++)
+    {
+        pinMode(qei_cs[i], OUTPUT);
+        digitalWrite(qei_cs[i], HIGH);
+    }
     SPI.begin();
 
-    delay(100);
-
-    digitalWrite(qei_cs, LOW);
-    SPI.transfer(WR | MDR0);
-    SPI.transfer(MDR0_CONF);
-    digitalWrite(qei_cs, HIGH);
-
-    delay(100);
-
-    digitalWrite(qei_cs, LOW);
-    SPI.transfer(WR | MDR1);
-    SPI.transfer(MDR1_CONF);
-    digitalWrite(qei_cs, HIGH);
-
-    delay(100);
-    
-    reset();
+    for (int i = 0; i < _num_of_qei; i++)
+    {
+        init_one_spi_device(qei_cs[i]);
+        reset_one_spi_device(qei_cs[i]);
+    }
 }
 
-void LS7366R::reset()
+void LS7366R::reset_one_spi_device(unsigned char& qei_cs)
 {
     digitalWrite(qei_cs, LOW);
     SPI.transfer(CLR | CNTR);
     digitalWrite(qei_cs, HIGH);
 }
 
-long LS7366R::read()
+void LS7366R::read()
 {
-    digitalWrite(qei_cs, LOW);
-    SPI.transfer(LOAD | OTR);
-    digitalWrite(qei_cs, HIGH);
-
-    digitalWrite(qei_cs, LOW);
-    SPI.transfer(RD | OTR);
-    count = SPI.transfer(0x00);
-    count <<= 8;
-    count |= SPI.transfer(0x00);
-    count <<= 8;
-    count |= SPI.transfer(0x00);
-    count <<= 8;
-    count |= SPI.transfer(0x00);
-    digitalWrite(qei_cs, HIGH);
-    pulse = count;
-
-    return pulse;
+    for (int i = 0; i < num_of_qei; i++)
+    {
+        pulse[i] = read_one_spi_device(qei_cs[i]);
+    }
 }
