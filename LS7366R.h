@@ -20,7 +20,7 @@ public:
     void read();
     const long* get_pulse() { return pulse; }
 
-    void reset_one_spi_device(unsigned char& qei_cs);
+    void reset_one_spi_device(const unsigned char& qei_cs);
 protected:
     void init_one_spi_device(unsigned char& qei_cs)
     {

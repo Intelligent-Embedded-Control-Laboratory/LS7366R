@@ -13,8 +13,12 @@ void LS7366R::begin(const unsigned char* _qei_cs, int _num_of_qei)
         pinMode(qei_cs[i], OUTPUT);
         digitalWrite(qei_cs[i], HIGH);
     }
+    delay(1000);
+
+    // Begin SPI
     SPI.begin();
 
+    // 
     for (int i = 0; i < _num_of_qei; i++)
     {
         init_one_spi_device(qei_cs[i]);
@@ -22,7 +26,7 @@ void LS7366R::begin(const unsigned char* _qei_cs, int _num_of_qei)
     }
 }
 
-void LS7366R::reset_one_spi_device(unsigned char& qei_cs)
+void LS7366R::reset_one_spi_device(const unsigned char& qei_cs)
 {
     digitalWrite(qei_cs, LOW);
     SPI.transfer(CLR | CNTR);
