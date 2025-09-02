@@ -1,7 +1,8 @@
 #include "LS7366R.h"
 
-void LS7366R::begin(const unsigned char* _qei_cs, int _num_of_qei)
+void LS7366R::begin(const unsigned char* _qei_cs, int _num_of_qei, Resolution _resolution)
 {
+    MDR0_CONF = _resolution;
     num_of_qei = _num_of_qei;
     qei_cs = new unsigned char[_num_of_qei];
     pulse = new long int[_num_of_qei];

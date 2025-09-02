@@ -16,7 +16,14 @@
 class LS7366R /* 2022-07-30 */
 {
 public:
-    void begin(const unsigned char* _qei_cs, int _num_of_qei);
+    enum Resolution
+    {
+        RES_NON = B00000000, // non-quadrature count mode. (A = clock, B = direction).
+        RES_X1 = B00000001, // x1 quadrature count mode (one count per quadrature cycle).
+        RES_X2 = B00000010,
+        RES_X4 = B00000011
+    };
+    void begin(const unsigned char* _qei_cs, int _num_of_qei, Resolution _resolution = RES_X4);
     void read();
     const long* get_pulse() { return pulse; }
 
@@ -60,7 +67,9 @@ protected:
     long count;
 
     /* Register Map */
-    const uint8_t MDR0_CONF = B00000011;
+    // const uint8_t MDR0_CONF = B00000011;
+    // const uint8_t MDR0_CONF = B00000000;
+    uint8_t MDR0_CONF;
     const uint8_t MDR1_CONF = B00000000;
     const uint8_t CLR = B00000000;
     const uint8_t RD = B01000000;
