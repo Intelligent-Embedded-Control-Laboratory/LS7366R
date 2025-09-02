@@ -16,7 +16,7 @@ void setup()
 {
     Serial.begin(115200);
 
-    encoder.begin(PIN_QEI, 4);
+    encoder.begin(PIN_QEI, 4, LS7366R::RES_X4); 
 }
 
 void loop()
